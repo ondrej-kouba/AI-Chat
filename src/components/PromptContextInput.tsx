@@ -8,7 +8,7 @@ export const PromptContextInput = ({onClick} : PromptContextInputProps) => {
 
     const [inputText, setInputText] = useState('');
     return <form>
-        <Input  onInput={e => {
+        <Input onInput={e => {
             // Fuck off TS.
             setInputText((e.target as any)?.value)
         }} type="text" title="test" placeholder="Enter prompt context" />
