@@ -1,4 +1,5 @@
 import {Avatar, Box, Flex, SkeletonText, Text} from "@chakra-ui/react";
+import {Colors} from "../colors/Colors.ts";
 
 export interface ChatBubbleProps {
     name: string,
@@ -29,3 +30,14 @@ export const ChatBubble = ({name, avatarSrc, message, color, textColor, origin, 
     </Flex>
 
 }
+
+
+export const createErrorBubbleProps = ({origin, avatarSrc, error, name}: { origin: "start" | "end", avatarSrc: string, error: string, name: string }): ChatBubbleProps => ({
+    color: Colors.gray,
+    textColor: 'red',
+    loading: false,
+    origin,
+    avatarSrc,
+    message: error,
+    name: name
+})

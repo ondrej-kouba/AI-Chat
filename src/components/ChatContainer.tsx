@@ -1,5 +1,5 @@
 import {Flex, Text} from "@chakra-ui/react";
-import {ChatBubble, ChatBubbleProps} from "./ChatBubble.tsx";
+import {ChatBubble, ChatBubbleProps, createErrorBubbleProps} from "./ChatBubble.tsx";
 import {useEffect, useRef, useState} from "react";
 import {MockGptApi} from "../gpts/MockGptApi.ts";
 import {Colors} from "../colors/Colors.ts";
@@ -7,6 +7,26 @@ import {Colors} from "../colors/Colors.ts";
 export interface ChatContainerProps {
     context: string
 }
+
+
+const gptBubbleData = {
+    // 0 is on the left, 1 is on the right
+    0: {
+        name: 'OH-SO',
+        avatarSrc: '',
+        color: Colors.blue,
+        textColor: 'white',
+        origin:'start',
+    },
+    1: {
+        name: 'SO-SO',
+        avatarSrc: '',
+        color: Colors.purple,
+        textColor: 'white',
+        origin: 'end'
+    }
+}
+
 
 export const ChatContainer = ({context}: ChatContainerProps) => {
 
@@ -18,6 +38,12 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
 
     const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
 
+
+    const replaceMessages = (newMessage: ChatBubbleProps) => {
+        setMessages((innerMessages) => {
+            return [...innerMessages.slice(0, innerMessages.length - 1), newMessage]
+        })
+    }
 
     const playMessages = async () => {
         let lastContext = context
@@ -31,37 +57,34 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
                 But nobody ain't got time fo' dat.
              */
             setMessages((innerMessages) => {
+                // @ts-ignore
                 return [...innerMessages, {
+                    ...gptBubbleData[side],
                     message: 'loading..',
-                    origin: side === 0 ? 'start' : 'end',
-                    name: 'OH-SO',
-                    textColor: 'white',
-                    color: side === 0 ? Colors.blue : Colors.purple,
-                    avatarSrc: '',
                     loading: true
                 }]
 
             })
 
-            const response = await gpt.prompt(i + '. ' + lastContext);
 
-            lastContext = response;
+            try {
+                const response = await gpt.prompt(i + '. ' + lastContext);
+                lastContext = response;
 
-            setMessages((innerMessages) => {
-
-                return [...innerMessages.slice(0, innerMessages.length - 1), {
+                replaceMessages({
+                    ...gptBubbleData[side],
                     message: response,
-                    origin: side === 0 ? 'start' : 'end',
-                    name: 'OH-SO',
-                    textColor: 'white',
-                    color: side === 0 ? Colors.blue : Colors.purple,
-                    avatarSrc: '',
                     loading: false
-                }]
-
-            })
-
-
+                })
+            } catch (e) {
+                console.error("GptApi Prompting failed: ", e)
+                replaceMessages(createErrorBubbleProps({
+                    ...gptBubbleData[side],
+                    error: "Failed to fetch from GPT API.",
+                    name: 'OH-SO',
+                }))
+                // TODO: Decrement `i` ? And maybe come up with better loop altogether.
+            }
         }
     }
 

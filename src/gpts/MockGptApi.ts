@@ -11,6 +11,9 @@ export class MockGptApi implements GptApi<string, string> {
     async prompt(text: string) {
         await new Promise((res) => setTimeout(res, 3000));
 
+        if (Math.random() > 0.7)
+            throw 'Fuck';
+
         return `Prompted: ${text}\nResponse: ${RANDOM_SHIT[Math.trunc(Math.random()*3)]}`
 
 
