@@ -9,8 +9,10 @@ export interface ChatContainerProps {
 }
 
 
-const gptBubbleData = {
+// Fuck this type.
+const gptBubbleData: Record<number, Exclude<ChatBubbleProps, ChatBubbleProps['message'] | ChatBubbleProps['loading']>> = {
     // 0 is on the left, 1 is on the right
+    // @ts-ignore
     0: {
         name: 'OH-SO',
         avatarSrc: '',
@@ -18,6 +20,7 @@ const gptBubbleData = {
         textColor: 'white',
         origin:'start',
     },
+    // @ts-ignore
     1: {
         name: 'SO-SO',
         avatarSrc: '',
@@ -80,7 +83,7 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
                 console.error("GptApi Prompting failed: ", e)
                 replaceMessages(createErrorBubbleProps({
                     ...gptBubbleData[side],
-                    error: "Failed to fetch from GPT API.",
+                    error: "Failed to fetch from GPT API. This is faked error with 30% probability, don't be alarmed.",
                     name: 'OH-SO',
                 }))
                 // TODO: Decrement `i` ? And maybe come up with better loop altogether.
