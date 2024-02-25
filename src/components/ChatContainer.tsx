@@ -1,8 +1,8 @@
 import {Flex, Text} from "@chakra-ui/react";
 import {ChatBubble, ChatBubbleProps, createErrorBubbleProps} from "./ChatBubble.tsx";
 import {useEffect, useRef, useState} from "react";
-import {MockGptApi} from "../gpts/MockGptApi.ts";
 import {Colors} from "../colors/Colors.ts";
+import { Ollama } from "../gpts/Ollama.ts";
 
 export interface ChatContainerProps {
     context: string
@@ -35,8 +35,8 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
 
 
     let isPlaying = false;
-    const firstGpt = useRef(new MockGptApi());
-    const secondGpt = useRef(new MockGptApi());
+    const firstGpt = useRef(new Ollama());
+    const secondGpt = useRef(new Ollama());
     const gpts = [firstGpt, secondGpt];
 
     const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
@@ -71,14 +71,30 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
 
 
             try {
-                const response = await gpt.prompt(i + '. ' + lastContext);
-                lastContext = response;
+                const response = await gpt.prompt(i + '. ' + lastContext, !!side);
+                if(typeof response === "string")
+                {
+                    lastContext = response;
 
-                replaceMessages({
-                    ...gptBubbleData[side],
-                    message: response,
-                    loading: false
-                })
+                    replaceMessages({
+                        ...gptBubbleData[side],
+                        message: response,
+                        loading: false
+                    })
+                }
+                else {
+                    let responseText:string = "";
+                    for await (const part of response) {
+                        responseText += part.message.content;
+                        replaceMessages({
+                            ...gptBubbleData[side],
+                            message: responseText,
+                            loading: false
+                        });
+                        if(part.done) lastContext=responseText;
+                    }
+                     
+                }
             } catch (e) {
                 console.error("GptApi Prompting failed: ", e)
                 replaceMessages(createErrorBubbleProps({
@@ -93,6 +109,7 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
 
     useEffect(() => {
         // Fucking React triggers this useEffect twice
+        // Do not use React 18 ;) 
         if (!isPlaying) {
             isPlaying = true;
             playMessages()
