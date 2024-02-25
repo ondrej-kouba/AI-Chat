@@ -71,7 +71,7 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
 
 
             try {
-                const response = await gpt.prompt(i + '. ' + lastContext, !!side);
+                const response = await gpt.prompt(lastContext, !!side);
                 if(typeof response === "string")
                 {
                     lastContext = response;
