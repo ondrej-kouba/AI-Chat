@@ -3,6 +3,7 @@ import {ChatBubble, ChatBubbleProps, createErrorBubbleProps} from "./ChatBubble.
 import {useEffect, useRef, useState} from "react";
 import {Colors} from "../colors/Colors.ts";
 import { Ollama } from "../gpts/Ollama.ts";
+import { ChatGPT } from "../gpts/ChatGPT.ts";
 
 export interface ChatContainerProps {
     context: string
@@ -35,8 +36,8 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
 
 
     let isPlaying = false;
-    const firstGpt = useRef(new Ollama());
-    const secondGpt = useRef(new Ollama());
+    const firstGpt = useRef(new ChatGPT());
+    const secondGpt = useRef(new ChatGPT());
     const gpts = [firstGpt, secondGpt];
 
     const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
@@ -85,14 +86,14 @@ export const ChatContainer = ({context}: ChatContainerProps) => {
                 else {
                     let responseText:string = "";
                     for await (const part of response) {
-                        responseText += part.message.content;
+                        responseText += gpt.extractFromStream(part);
                         replaceMessages({
                             ...gptBubbleData[side],
                             message: responseText,
                             loading: false
-                        });
-                        if(part.done) lastContext=responseText;
+                        });  
                     }
+                    lastContext=responseText;
                      
                 }
             } catch (e) {

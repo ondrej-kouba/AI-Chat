@@ -1,7 +1,10 @@
 import { GptApi } from "./GptApi"
 import ollama, { ChatResponse } from 'ollama'
 
-export class Ollama implements GptApi<string, AsyncGenerator<ChatResponse>>{
+export class Ollama implements GptApi<string, ChatResponse>{
+    extractFromStream(chunk: ChatResponse): string {
+        return chunk.message.content;
+    }
     async prompt(text: string, second: boolean): Promise<AsyncGenerator<ChatResponse>> {
         console.log(text);
         if (second) {
