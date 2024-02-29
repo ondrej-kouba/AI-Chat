@@ -1,17 +1,15 @@
 import './App.css'
 import {ChakraProvider} from "@chakra-ui/react";
 import {ChatContainer} from "./components/ChatContainer.tsx";
-import {useState} from "react";
-import {PromptContextInput} from "./components/PromptContextInput.tsx";
+import { PlayBook } from './roleplays/roleplays.ts';
 
 function App() {
+    const play = PlayBook.CorporationVsStudio;
 
-
-    const [promptContext, setPromptContext] = useState<string | null>(null);
+    
     return (
         <ChakraProvider>
-            {!promptContext ? <PromptContextInput onClick={context => setPromptContext(context)} /> :
-            <ChatContainer context={promptContext}></ChatContainer>}
+            <ChatContainer context={play}></ChatContainer>
         </ChakraProvider>
     )
 }
