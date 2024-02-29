@@ -4,7 +4,7 @@ import { ChatCompletionChunk } from "openai/resources/index.mjs";
 import { RolePlay } from "../roleplays/roleplays";
 
 const openai = new OpenAI({
-    apiKey:'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',
+    apiKey:'not for your eys',
     dangerouslyAllowBrowser:true
   });
 
