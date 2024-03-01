@@ -1,15 +1,10 @@
 import { RolePlay } from "../roleplays/roleplays";
-import { GptApi } from "./GptApi"
-import ollama, { Message, ChatResponse } from 'ollama'
-
-interface History{
-    ai1:Message[];
-    ai2:Message[];
-}
+import { ChatHistory, GptApi } from "./GptApi"
+import ollama, {ChatResponse } from 'ollama'
 
 export class Ollama implements GptApi<string, ChatResponse>{
 
-    private history:History = {
+    private history:ChatHistory = {
         ai1: [],
         ai2: []
     };
@@ -29,7 +24,7 @@ export class Ollama implements GptApi<string, ChatResponse>{
             this.history.ai2.push({role:'user', content:text});
             return await ollama.chat({ model: "neural-chat", messages: this.history.ai2, stream: true, })
         }
-        this.history.ai1.push({role:'user',content:text});
+        this.history.ai1.push({role:'user', content:text});
         this.history.ai2.push({role:'assistant', content:text});
         return ollama.chat({ model: "neural-chat", messages: this.history.ai1, stream: true });
     }
