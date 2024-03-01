@@ -34,10 +34,11 @@ const gptBubbleData: Record<number, Exclude<ChatBubbleProps, ChatBubbleProps['me
 
 
 export const ChatContainer = ({context}: ChatContainerProps) => {
-
+    gptBubbleData[0].name = context.name1;
+    gptBubbleData[1].name = context.name2;
     let isPlaying = false;
-    const firstGpt = useRef(new ChatGPT());
-    const secondGpt = useRef(new ChatGPT());
+    const firstGpt = useRef(new Ollama());
+    const secondGpt = useRef(new Ollama());
     const gpts = [firstGpt, secondGpt];
 
     const [messages, setMessages] = useState<ChatBubbleProps[]>([]);

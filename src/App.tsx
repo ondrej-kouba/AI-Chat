@@ -4,8 +4,8 @@ import {ChatContainer} from "./components/ChatContainer.tsx";
 import { PlayBook } from './roleplays/roleplays.ts';
 
 function App() {
-    const play = PlayBook.CorporationVsStudio;
-
+    //const play = PlayBook.SongNames;
+    const play = PlayBook.GhandiVsSteveJobsBraginn;
     
     return (
         <ChakraProvider>
