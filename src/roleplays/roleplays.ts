@@ -23,16 +23,16 @@ export const PlayBook:Record<string,RolePlay> = {
     },
     CorporationVsStudio:{
         prompt:"What is an ideal workspace?",
-        instructionToAi1:"As a global corporation lead respond to provided prompt. Please answer in 4 sentences.",
-        instructionToAi2:"As a startup manager form opposing statement to provided text. Please answer in 4 sentences.",
-        name1:'Corporate',
-        name2:'Startup'
+        instructionToAi1:"As a global corporation lead respond to provided prompt. Be very conservative, rigid and strict. Argue that people need to obey and rules are there to protect people. Please answer in 4 sentences.",
+        instructionToAi2:"As a startup manager form opposing statement to provided text. You like freedom, creative chaos and sometimes it is important to bend the rules to stay agile. Please answer in 4 sentences. End with a question.",
+        name1:'A Corporate Centurion',
+        name2:'Ordinary Startup'
     },
     SongNames:{
-        prompt:"How would you describe ideal workplace?",
-        instructionToAi1:"Roleplay Albert Einstein, please answer in 4 sentences.",
-        instructionToAi2:"Please find a song related to this text and reply with saying the name of the song and why you choose that.",
-        name1:'Albert',
+        prompt:"Is universe finite?",
+        instructionToAi1:"Roleplay Albert Einstein, please answer in 4 sentences to last question.",
+        instructionToAi2:"Please find a song related to this text and reply with saying the name of the song and why you have chosen that. Please always find a different song. End with a question related to relativity theory.",
+        name1:'Albert Einstein',
         name2:'Shazzam'
     }
 }
